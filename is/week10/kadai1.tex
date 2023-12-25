@@ -1,0 +1,90 @@
+\documentclass[a4paper,11pt]{ltjsarticle}
+
+
+% 数式
+\usepackage{amsmath,amsfonts}
+\usepackage{bm}
+% 画像
+\usepackage{graphicx}
+%枠付き文書
+\usepackage{ascmac}
+\usepackage{fancybox}
+
+
+\begin{document}
+
+\title{知能システム論第10回 問1}
+\author{ 05-231001 阿部 桃大}
+\maketitle
+
+\section*{問題1}
+\begin{itembox}[l]{問題1}
+  CKY法とビタビアルゴリズムの計算量を与えよ\newline
+  • ⼊⼒⽂の⻑さ： $n$\newline
+  • ⾮終端記号の数($|N|$): $k$\newline
+  • ⽣成規則の数(|R|): $r$
+\end{itembox}
+\subsection*{CKY法}
+一段目の計算量は$O(nr)$である。
+
+l段目$(l=2,3,\cdots,n)$の計算量は、
+\begin{equation*}
+  O\left(\sum_{i=0}^{n-l}\sum_{m=i+1}^{i+l-1}k^2 r\right)=O\left(\sum_{i=0}^{n-l} (l-2)k^2 r\right)=O((n-l)lk^2 r)
+\end{equation*}
+である。
+
+よって、CKY法の計算量は、
+\begin{equation*}
+  O(nr+\sum_{l=2}^n (n-l)lk^2r)=O(nr+n^3k^2r)=O(n^3k^2r)
+\end{equation*}
+である。
+
+\subsection*{ビタビアルゴリズム}
+ビタビアルゴリズムでは、CKY法の計算に加えて、最尤解を求める処理があるが、この処理は元の計算の定数倍であるので、ビタビアルゴリズムの計算量は、
+\begin{equation*}
+  O(n^3k^2r)
+\end{equation*}
+である。
+
+\section*{問題2}
+\begin{itembox}[l]{問題2}
+  PCFG構⽂解析にA*探索あるいはビームサーチ
+  を適⽤するアルゴリズムを構築し、その計算量
+  を与えよ。
+\end{itembox}
+ここでは、ビームサーチを用いたPCFG構文解析のアルゴリズムを示す。
+
+ビームサーチでは、各セルにおいて、入れる非終端記号を制限することで、計算量を削減する。ここでは、各セルにおいて、a個の非終端記号を保持することとする。このとき、アルゴリズムは以下のようになる。ただし、tableはpを優先度とした優先度付きキューである。
+\begin{verbatim}
+for i = 1 to n
+  table (i - 1,i) ← {A| A → x_i ∈ R}
+  prob (i - 1,i) ← p(A → x_i)
+for l=2 to n
+  for i=0 to n-l
+    j=i+l
+    for m=i+1 to j-1
+      for X in table(i,m)
+        for Y in table(m,j)
+          for Z in N
+            if (Z → XY) ∈ R then
+              p=prob(i,m,X)*prob(m,j,Y)*p(Z → XY)
+              if p>prob(i,j,Z) then
+                if |table (i,j)|<a then
+                  table (i,j).push(Z)
+                  back (i,j,Z) ← (m,X,Y)
+                  prob (i,j,Z) ← p
+                else
+                  if p>min(table (i,j)) then
+                    table (i,j).pop()
+                    table (i,j).push(Z)
+                    back (i,j,Z) ← (m,X,Y)
+                    prob (i,j,Z) ← p
+\end{verbatim}
+
+このアルゴリズムの計算量は、各セルで探索対象の非終端記号をa個に制限しているので、ビタビアルゴリズムの計算量のkをaに置き換えたものとなる。よって、ビームサーチの計算量は、
+\begin{equation*}
+  O(n^3a^2r)
+\end{equation*}
+である。
+
+\end{document}

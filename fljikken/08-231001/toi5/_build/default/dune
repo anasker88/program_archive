@@ -1,0 +1,9 @@
+(executable
+ (name main)
+ (flags
+  (:standard -warn-error -a))
+  (modes byte)
+ (promote (until-clean)))
+
+(ocamllex (modules lexer))
+(menhir (modules parser))

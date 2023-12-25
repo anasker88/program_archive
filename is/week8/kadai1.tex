@@ -1,0 +1,59 @@
+\documentclass[a4paper,11pt]{ltjsarticle}
+
+
+% 数式
+\usepackage{amsmath,amsfonts}
+\usepackage{bm}
+% 画像
+\usepackage{graphicx}
+%枠付き文書
+\usepackage{ascmac}
+\usepackage{fancybox}
+
+\begin{document}
+
+\title{知能システム論第8回 問1}
+\author{ 05-231001 阿部 桃大}
+\maketitle
+
+\begin{itembox}[l]{問題}
+  深さ優先探索、幅優先探索、貪欲探索、最適探索、A*探索、ビームサーチは、「探索の基本」で⽰したアルゴリズムの OPEN を変えることで実装できる。\newline
+  これらの⼿法において OPEN をどのように実装すればよいか説明せよ
+\end{itembox}
+探索の基本のアルゴリズムは以下の通りである。
+
+\begin{verbatim}
+OPEN ← {q_0}
+VISITED ← ∅
+do while:
+if OPEN.empty then return FALSE
+q ← OPEN.pop
+if η(q) = TRUE then return TRUE
+if q ∉ VISITED then:
+  VISITED.add(q)
+  for a ∈ A(q) :
+  q' ← δ(q, a)
+  OPEN.add(q')
+\end{verbatim}
+
+それぞれのアルゴリズムにおけるOPENの実装は以下の通りである。
+
+\begin{enumerate}
+  \item 深さ優先探索 \newline
+        OPENはスタックで実装する。スタックは後入れ先出しであるため、OPENに子ノードが追加されると、その子ノードが優先的に探索される。子ノードがない場合は、親ノードに戻る。こうして、深さ優先探索が実現される。
+  \item 幅優先探索 \newline
+        OPENはキューで実装する。キューは先入れ先出しであるため、OPENに追加された子ノードは、親の兄弟ノードよりも優先度は低い。したがって、親ノードの兄弟ノードが全て探索されるまで、子ノードは探索されない。こうして、幅優先探索が実現される。
+  \item 貪欲探索 \newline
+        OPENは優先度付きキューで実装する。ここで優先度は、ゴールまでの距離を推定したヒューリスティック関数である。これにより、ゴールに近いノードが優先的に探索される。したがって、貪欲探索が実現される。
+  \item 最適探索 \newline
+        OPENは優先度付きキューで実装する。ここで優先度は、スタートからの最短経路でのコストである。これにより、最短経路が優先的に探索される。したがって、最適探索が実現される。
+  \item A*探索\newline
+        A*探索は、貪欲探索と最適探索を組み合わせたアルゴリズムである。OPENは優先度付きキューで実装する。ここで優先度は、スタートからの最短経路でのコストとゴールまでの距離を推定したヒューリスティック関数の和である。これにより、スタートからゴールへの推定コストが最小のノードが優先的に探索される。したがって、A*探索が実現される。
+  \item ビームサーチ\newline
+        ビームサーチは幅優先探索を改良したアルゴリズムである。これには、様々な実装方法があるが、一つには、OPENを幅優先探索と同様にキューで実装する。ただし、このキューのサイズをある一定の上限値以下に制限する。これにより、OPENに追加された子ノードの数が制限される。したがって、ビームサーチが実現される。
+\end{enumerate}
+
+
+
+
+\end{document}

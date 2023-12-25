@@ -1,0 +1,394 @@
+問1:
+・例にそって実行ファイルを生成・実行せよ
+出力例:
+ ./sort <<END
+> ccc
+> aa
+> eee
+> sss
+> END
+aa
+ccc
+eee
+sss
+
+考察:
+sortが意図通りに構成され、実行されていることがわかる。
+
+▪ .cmo をインタプリタで利用せよ
+出力例:
+# #load "strSet.cmo";;
+# StrSet.empty;;
+- : StrSet.t = <abstr>
+# StrSet.count_sub ;;
+Error: Unbound value StrSet.count_sub
+# open StrSet;;
+# add "abc" empty;;
+- : t = <abstr>
+
+考察:
+strSet.ml内で定義したモジュールが利用できている。
+
+▪ .mli をコンパイルしないとどうなるか
+出力例:
+$ ocamlc -c strSet.ml
+File "strSet.ml", line 1:
+Error: Could not find the .cmi file for interface strSet.mli.
+
+考察:
+mliファイルが見えているのに未コンパイルで参照できないのでエラーとなる。
+
+▪ 最後のリンク時にファイルの順番を変えるとどうなるか
+出力例:
+$ ocamlc -o sort sort.cmo strSet.cmo
+File "_none_", line 1:
+Error: Wrong link order: Sort depends on StrSet, Sort depends on StrSet,
+         Sort depends on StrSet, Sort depends on StrSet
+
+考察:
+sortがstrSet内のモジュールを使用しているため、先にstrSet.cmoを読まないとエラーとなる。
+
+・Dune を用いてみよ
+binファイルにstrSer.mli,strSer.ml,sort.mlを入れ、dune buildを実行すると、dune exec sortから実行が可能であった。
+出力例:
+$ dune exec sort <<END
+> qqq
+> www
+> eee
+> rrr
+> ttt
+> END
+eee
+qqq
+rrr
+ttt
+www
+
+考察:
+コンパイルを一括で行うことができ、楽であった。
+
+問２
+出力例:
+─( 10:54:10 )─< command 0 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # #use  "toi2.ml";;
+exception PopError
+module type ABSTSTACK =
+  sig
+    type 'a t
+    val pop : 'a t -> 'a * 'a t
+    val push : 'a -> 'a t -> 'a t
+    val empty : 'a t
+    val size : 'a t -> int
+  end
+module AbstStack : ABSTSTACK
+─( 10:54:10 )─< command 1 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a =AbstStack.empty;;
+val a : 'a AbstStack.t = <abstr>
+─( 10:54:34 )─< command 2 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a =AbstStack.push 0 a;;
+val a : int AbstStack.t = <abstr>
+─( 10:55:10 )─< command 3 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a =AbstStack.push 1 a;;
+val a : int AbstStack.t = <abstr>
+─( 10:55:26 )─< command 4 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a =AbstStack.push 2 a;;
+val a : int AbstStack.t = <abstr>
+─( 10:55:28 )─< command 5 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a =AbstStack.push 3 a;;
+val a : int AbstStack.t = <abstr>
+─( 10:55:32 )─< command 6 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # AbstStack.size a;;
+- : int = 4
+─( 10:55:34 )─< command 7 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let (b,a)=AbstStack.pop a;;
+val b : int = 3
+val a : int AbstStack.t = <abstr>
+─( 10:55:44 )─< command 8 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let (b,a)=AbstStack.pop a;;
+val b : int = 2
+val a : int AbstStack.t = <abstr>
+─( 10:56:22 )─< command 9 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # AbstStack.size a;;
+- : int = 2
+
+考察:
+リストとしてスタックを実装し、先頭から挿入して先頭から取り出すことで後入れ先出しのデータ構造を実現した。
+型についても抽象性を保っていることにより、様々な型についてスタックとして利用することができる。
+
+問3
+出力例:
+utop # #use "toi3.ml";;
+type order = LT | EQ | GT
+module type ORDERED_TYPE = sig type t val compare : t -> t -> order end
+module type MULTISET2 =
+  functor (T : ORDERED_TYPE) ->
+    sig
+      type t
+      val empty : t
+      val add : T.t -> t -> t
+      val remove : T.t -> t -> t
+      val count : T.t -> t -> int
+    end
+exception GetMinError
+module AbstMultiset2 : MULTISET2
+─( 20:12:14 )─< command 1 >─────────────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # module OrderedString =
+struct
+  type t = string
+  let compare x y =
+    let r = Stdlib.compare x y in
+      if      r > 0 then GT
+      else if r < 0 then LT
+      else               EQ
+end;;
+module OrderedString : sig type t = string val compare : 'a -> 'a -> order end
+─( 20:12:20 )─< command 2 >─────────────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # module AbstStringMultiset =
+  AbstMultiset2 (OrderedString);;
+module AbstStringMultiset :
+  sig
+    type t = AbstMultiset2(OrderedString).t
+    val empty : t
+    val add : string -> t -> t
+    val remove : string -> t -> t
+    val count : string -> t -> int
+  end
+─( 20:12:30 )─< command 4 >─────────────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=AbstStringMultiset.empty;;
+val a : AbstStringMultiset.t = <abstr>
+─( 20:12:36 )─< command 5 >─────────────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=AbstStringMultiset.add "aaa" a;;
+val a : AbstStringMultiset.t = <abstr>
+─( 20:12:41 )─< command 6 >─────────────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=AbstStringMultiset.add "aaa" a;;
+val a : AbstStringMultiset.t = <abstr>
+─( 20:12:49 )─< command 7 >─────────────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=AbstStringMultiset.add "aaa" a;;
+val a : AbstStringMultiset.t = <abstr>
+─( 20:12:50 )─< command 8 >─────────────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=AbstStringMultiset.add "bbb" a;;
+val a : AbstStringMultiset.t = <abstr>
+─( 20:12:51 )─< command 9 >─────────────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=AbstStringMultiset.add "bbb" a;;
+val a : AbstStringMultiset.t = <abstr>
+─( 20:13:00 )─< command 10 >────────────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=AbstStringMultiset.add "ccc" a;;
+val a : AbstStringMultiset.t = <abstr>
+─( 20:13:01 )─< command 11 >────────────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # AbstStringMultiset.count "aaa" a;;
+- : int = 3
+─( 20:13:07 )─< command 12 >────────────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=AbstStringMultiset.remove "aaa" a;;
+val a : AbstStringMultiset.t = <abstr>
+─( 20:13:49 )─< command 13 >────────────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # AbstStringMultiset.count "aaa" a;;
+- : int = 2
+
+考察:
+二分木を用いて多重集合を扱うAbstMultiset2を実装した。実装については重複を許した二分探索木としてナイーブに行った。
+全体としてリストよりも少し複雑な処理を必要とするため、実装量についても多くなっている。
+
+問4
+出力例:
+─( 11:08:40 )─< command 0 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # #use "toi4.ml";;
+type order = LT | EQ | GT
+module type ORDERED_TYPE = sig type t val compare : t -> t -> order end
+exception GetMinError
+module MakeMap :
+  functor (T : ORDERED_TYPE) ->
+    sig
+      type t = Leaf | Node of T.t * string * t * t
+      val empty : t
+      val add : T.t -> string -> t -> t
+      val dltmin : t -> t
+      val getmin : t -> T.t
+      val remove : T.t -> t -> t
+      exception Not_found
+      val lookup : T.t -> t -> string
+    end
+─( 11:08:40 )─< command 1 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop #  module OrderedString =
+struct
+  type t = string
+  let compare x y =
+    let r = Stdlib.compare x y in
+      if      r > 0 then GT
+      else if r < 0 then LT
+      else               EQ
+end;;
+module OrderedString : sig type t = string val compare : 'a -> 'a -> order end
+─( 11:08:52 )─< command 2 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # module StringMap=MakeMap(OrderedString);;
+module StringMap :
+  sig
+    type t = MakeMap(OrderedString).t = Leaf | Node of string * string * t * t
+    val empty : t
+    val add : string -> string -> t -> t
+    val dltmin : t -> t
+    val getmin : t -> string
+    val remove : string -> t -> t
+    exception Not_found
+    val lookup : string -> t -> string
+  end
+─( 11:09:44 )─< command 3 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=StringMap.empty;;
+val a : StringMap.t = StringMap.Leaf
+─( 11:10:31 )─< command 4 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=StringMap.add "hello" "konnnichiha" a;;
+val a : StringMap.t =
+  StringMap.Node ("hello", "konnnichiha", StringMap.Leaf, StringMap.Leaf)
+─( 11:11:16 )─< command 5 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=StringMap.add "goodmorning" "ohayougozaimasu" a;;
+val a : StringMap.t =
+  StringMap.Node ("hello", "konnnichiha",
+   StringMap.Node ("goodmorning", "ohayougozaimasu", StringMap.Leaf,
+    StringMap.Leaf),
+   StringMap.Leaf)
+─( 11:12:06 )─< command 6 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=StringMap.add "goodnight" "oyasuminasai" a;;
+val a : StringMap.t =
+  StringMap.Node ("hello", "konnnichiha",
+   StringMap.Node ("goodmorning", "ohayougozaimasu", StringMap.Leaf,
+    StringMap.Node ("goodnight", "oyasuminasai", StringMap.Leaf,
+     StringMap.Leaf)),
+   StringMap.Leaf)
+─( 11:12:43 )─< command 7 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # StringMap.lookup "goodnight" a;;
+- : string = "oyasuminasai"
+─( 11:13:08 )─< command 8 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=StringMap.add "goodnight" "oyasumi" a;;
+val a : StringMap.t =
+  StringMap.Node ("hello", "konnnichiha",
+   StringMap.Node ("goodmorning", "ohayougozaimasu", StringMap.Leaf,
+    StringMap.Node ("goodnight", "oyasumi", StringMap.Leaf, StringMap.Leaf)),
+   StringMap.Leaf)
+─( 11:13:39 )─< command 9 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # StringMap.lookup "goodnight" a;;
+- : string = "oyasumi"
+─( 11:14:08 )─< command 10 >──────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a=StringMap.remove "goodnight" a;;
+val a : StringMap.t =
+  StringMap.Node ("hello", "konnnichiha",
+   StringMap.Node ("goodmorning", "ohayougozaimasu", StringMap.Leaf,
+    StringMap.Leaf),
+   StringMap.Leaf)
+─( 11:14:23 )─< command 11 >──────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # StringMap.lookup "goodnight" a;;
+Exception: MakeMap(T).Not_found.
+
+考察:
+問３で実装した二分探索木をベースに二分探索木による連想配列の実装を行った。
+問３からの変更点としては、探索木のノードを並べる基準となるkeyのほかにノードがもう一つ要素を持っていること、そしてkeyは重複を許さず、同じkeyをaddした際はそれで上書きするようにしたことである。
+このように重複を許さず、探索を行いたいようなデータ構造に対しては二分探索木が有効であることがうかがえる。
+
+問5
+出力例:
+─( 11:49:07 )─< command 0 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop #  #use "toi5.ml";;
+module type SEMIRING =
+  sig
+    type t
+    val add : t -> t -> t
+    val mul : t -> t -> t
+    val unit : t
+    val zero : t
+  end
+exception DifferentSize
+module Matrix :
+  functor (T : SEMIRING) ->
+    sig
+      type vec = T.t list
+      type mat = T.t list list
+      val add_vec : vec -> vec -> T.t list
+      val mul_vec : vec -> vec -> T.t
+      val add_mat : mat -> mat -> T.t list list
+      val trans : mat -> T.t list list
+      val mul_vecmat : vec -> mat -> T.t list
+      val mul_mat : mat -> mat -> T.t list list
+    end
+module BoolSemiring :
+  sig
+    type t = bool
+    val add : t -> t -> t
+    val mul : t -> t -> t
+    val zero : t
+    val unit : t
+  end
+module BoolMatrix :
+  sig
+    type vec = bool list
+    type mat = bool list list
+    val add_vec : vec -> vec -> bool list
+    val mul_vec : vec -> vec -> bool
+    val add_mat : mat -> mat -> bool list list
+    val trans : mat -> bool list list
+    val mul_vecmat : vec -> mat -> bool list
+    val mul_mat : mat -> mat -> bool list list
+  end
+module TropSemiring :
+  sig
+    type t = INF | NUM of int
+    val add : t -> t -> t
+    val mul : t -> t -> t
+    val zero : t
+    val unit : t
+  end
+module TropMatrix :
+  sig
+    type vec = TropSemiring.t list
+    type mat = TropSemiring.t list list
+    val add_vec : vec -> vec -> TropSemiring.t list
+    val mul_vec : vec -> vec -> TropSemiring.t
+    val add_mat : mat -> mat -> TropSemiring.t list list
+    val trans : mat -> TropSemiring.t list list
+    val mul_vecmat : vec -> mat -> TropSemiring.t list
+    val mul_mat : mat -> mat -> TropSemiring.t list list
+  end
+─( 11:49:07 )─< command 1 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a = [[true;false];[true;false]]
+let b = [[true;true];[true;false]];;
+val a : bool list list = [[true; false]; [true; false]]
+val b : bool list list = [[true; true]; [true; false]]
+─( 11:49:09 )─< command 2 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # BoolMatrix.add_mat a b;;
+- : bool list list = [[true; true]; [true; false]]
+─( 11:49:11 )─< command 3 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop #  BoolMatrix.mul_mat a b;;
+- : bool list list = [[true; true]; [true; true]]
+─( 11:49:16 )─< command 4 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # BoolMatrix.mul_mat b a;;
+- : bool list list = [[true; false]; [true; false]]
+─( 11:52:36 )─< command 5 >──────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let a:TropSemiring.t list list =[[NUM 1;NUM 2];[NUM 3;NUM 4]]
+let b:TropSemiring.t list list = [[NUM 16;NUM 9];[NUM 4;NUM 1]];;
+val a : TropSemiring.t list list =
+  [[TropSemiring.NUM 1; TropSemiring.NUM 2];
+   [TropSemiring.NUM 3; TropSemiring.NUM 4]]
+val b : TropSemiring.t list list =
+  [[TropSemiring.NUM 16; TropSemiring.NUM 9];
+   [TropSemiring.NUM 4; TropSemiring.NUM 1]]
+─( 11:53:12 )─< command 6 >──────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # TropMatrix.add_mat a b;;
+- : TropSemiring.t list list =
+[[TropSemiring.NUM 1; TropSemiring.NUM 2];
+ [TropSemiring.NUM 3; TropSemiring.NUM 1]]
+─( 11:53:54 )─< command 7 >──────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # TropMatrix.mul_mat a b;;
+- : TropSemiring.t list list =
+[[TropSemiring.NUM 6; TropSemiring.NUM 3];
+ [TropSemiring.NUM 8; TropSemiring.NUM 5]]
+─( 11:54:16 )─< command 8 >──────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # TropMatrix.mul_mat b a;;
+- : TropSemiring.t list list =
+[[TropSemiring.NUM 12; TropSemiring.NUM 13];
+ [TropSemiring.NUM 4; TropSemiring.NUM 5]]
+
+考察:
+各演算について、問題を細分化して扱った。
+横ベクトルはリストで、行列はリストのリストとして扱うこととした。
+足し算についてはまずベクトル同士の足し算を定義し、それをもとに行列同士の足し算を定義した。
+掛け算は少し複雑で、まずベクトルの内積を定義し、それを用いてベクトルと行列の掛け算を定義した。
+この時右からかけられる行列については縦ベクトルを用いて計算されるため、行列を転置して内積によって計算できるよう工夫した。
+最後にこの結果を用いて行列同士の掛け算を定義した。
+BoolやTropについては加算、乗算とそれらの原始元に当たる0,1を適切に定義することで半環を定義し、これにMatrixを作用させることで行列計算が可能となった。

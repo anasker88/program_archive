@@ -1,0 +1,7 @@
+(executable
+ (name main)
+ (modes byte)
+ (libraries fl-jikken-unifier)
+ (flags
+  (:standard -warn-error -a))
+ (promote (until-clean)))

@@ -1,0 +1,118 @@
+問1
+出力例:
+─( 09:46:19 )─< command 0 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # #use "toi1.ml";;
+type 'a m = ('a, string) result
+val ( >>= ) : 'a m -> ('a -> 'b m) -> 'b m = <fun>
+val return : 'a -> 'a m = <fun>
+val ( let* ) : 'a m -> ('a -> 'b m) -> 'b m = <fun>
+val err : 'a -> ('b, 'a) result = <fun>
+val myDiv : int -> int -> int m = <fun>
+val eLookup : 'a -> ('a * 'b) list -> 'b m = <fun>
+val lookupDiv : 'a -> 'a -> ('a * int) list -> int m = <fun>
+val table : (string * int) list = [("x", 6); ("y", 0); ("z", 2)]
+val isErr : ('a, 'b) result -> bool = <fun>
+ok
+
+考察:
+今回用いたモナドでは、評価結果の値を、計算が成功した場合はok型で計算結果を保持し、失敗(値が見つからないか0除算である)場合はError型でエラーメッセージを保持することで管理している。
+したがってbindではエラーを受け取ったらそのエラーを引き継ぎ、ok型で値をもらったらその値を用いて計算を行うことで計算をつなげることができる。
+
+
+問2
+出力例:
+─( 09:45:27 )─< command 0 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # #use "toi2.ml";;
+type 'a m = 'a list
+val ( >>= ) : 'a m -> ('a -> 'b m) -> 'b m = <fun>
+val return : 'a -> 'a m = <fun>
+val ( let* ) : 'a m -> ('a -> 'b m) -> 'b m = <fun>
+val guard : bool -> unit m = <fun>
+val test_banana : int -> int -> int -> int -> int -> bool = <fun>
+val test_money : int -> int -> int -> int -> int -> int -> int -> int -> bool =
+  <fun>
+val calc_banana :
+  (int -> int -> int -> int -> int -> bool) -> (int * int * int * int * int) m =
+  <fun>
+val ans_banana : (int * int * int * int * int) m =
+  [(0, 0, 0, 0, 0); (1, 2, 0, 4, 4); (2, 4, 0, 8, 8); (2, 5, 0, 1, 0);
+   (3, 7, 0, 5, 4); (4, 9, 0, 9, 8); (5, 0, 1, 0, 0); (6, 2, 1, 4, 4);
+   (7, 4, 1, 8, 8); (7, 5, 1, 1, 0); (8, 7, 1, 5, 4); (9, 9, 1, 9, 8)]
+val calc_money :
+  (int -> int -> int -> int -> int -> int -> int -> int -> bool) ->
+  (int * int * int * int * int * int * int * int) m = <fun>
+val ans_money : (int * int * int * int * int * int * int * int) m =
+  [(9, 5, 6, 7, 1, 0, 8, 2)]
+
+考察:
+今回用いたモナドでは評価結果の値をリストで管理し、リストの値それぞれに対して適用したい関数を実行し、結果を結合するbindを用いることで計算をつないでいる。
+今回の計算の肝はguard関数であり、モナドの計算でつながってきたあらゆる組み合わせの場合に対し覆面算の計算を行い、条件に合うもののみを受け継ぐようにしている。
+また、二つ目の覆面算ではすべての場合について探索を行い、相異なる文字に対しては相異なる数字を割り当てるという条件をそれに対して調べるような実装をすると、探索範囲が膨大すぎるために計算時間が長くなってしまう。
+そのため、相異なる文字に対しては相異なる数字を割り当てるという条件を満たすような範囲のみの探索を行うようにすることで、実行時間が3秒以内に収まるようにした。
+
+問3
+出力例:
+─( 09:46:19 )─< command 0 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # #use "toi1.ml";;
+type 'a m = ('a, string) result
+val ( >>= ) : 'a m -> ('a -> 'b m) -> 'b m = <fun>
+val return : 'a -> 'a m = <fun>
+val ( let* ) : 'a m -> ('a -> 'b m) -> 'b m = <fun>
+val err : 'a -> ('b, 'a) result = <fun>
+val myDiv : int -> int -> int m = <fun>
+val eLookup : 'a -> ('a * 'b) list -> 'b m = <fun>
+val lookupDiv : 'a -> 'a -> ('a * int) list -> int m = <fun>
+val table : (string * int) list = [("x", 6); ("y", 0); ("z", 2)]
+val isErr : ('a, 'b) result -> bool = <fun>
+ok
+─( 09:46:19 )─< command 1 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # 
+tohta_abe@ispcJPH245YLSV:~/program/04-231001$ utop
+─────────────────────────────┬─────────────────────────────────────────────────────────────┬─────────────────────────────
+                             │ Welcome to utop version 2.9.2 (using OCaml version 4.14.1)! │                             
+                             └─────────────────────────────────────────────────────────────┘                             
+
+Type #utop_help for help about using utop.
+
+─( 09:59:49 )─< command 0 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # #use "toi3.ml";;
+type 'a m = 'a * string
+val ( >>= ) : 'a m -> ('a -> 'b m) -> 'b m = <fun>
+val return : 'a -> 'a m = <fun>
+val ( let* ) : 'a m -> ('a -> 'b m) -> 'b m = <fun>
+val writer : string -> unit m = <fun>
+val msg : int -> string = <fun>
+val fib : int -> int m = <fun>
+Fib(4)
+Fib(2)
+Fib(0)
+Fib(1)
+Fib(3)
+Fib(1)
+Fib(2)
+Fib(0)
+Fib(1)
+
+考察:
+今回用いたモナドでは、現在の式の値とこれまでの呼び出し履歴を('a,string)のタプルで管理している。
+したがってbindでは現在の式の値に適用したい処理を行った値と、これまでの履歴に今回の計算の履歴をくっつけた文字列を返すことで計算をつなげることができる。
+
+問4:
+出力例:
+─( 10:05:41 )─< command 0 >───────────────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # #use "toi4.ml";;
+type 'a m = ('a * 'a) list -> 'a * ('a * 'a) list
+val ( >>= ) : 'a m -> ('a -> 'a m) -> 'a m = <fun>
+val return : 'a -> 'a m = <fun>
+val ( let* ) : 'a m -> ('a -> 'a m) -> 'a m = <fun>
+val memo : (int -> int m) -> int -> int m = <fun>
+val runMemo : 'a m -> 'a = <fun>
+val fib : int -> int m = <fun>
+ok
+
+考察:
+今回のモナドでは、(n,f(n))という組のリストを受け取り、(v,(m,f(m))のリスト)という組を返すような型により実現されている。
+lを受け取るmemo関数においてこの型は引数は今までの計算結果を表し、返り値はlに対するf(l)と、それを計算したうえでの今までの計算結果を表す。
+bindでは初期リストinitを受け取りそれを初期値としてxを評価し、返り値をr,新しいリストをsとする。初期値をsとしてf rを評価することで計算をつなげている。
+
+

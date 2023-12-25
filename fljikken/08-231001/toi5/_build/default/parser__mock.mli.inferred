@@ -1,0 +1,30 @@
+type token =
+    TIMES
+  | THEN
+  | SEMISEMI
+  | RPAR
+  | REC
+  | PLUS
+  | MINUS
+  | LT
+  | LPAR
+  | LET
+  | INT of int
+  | IN
+  | IF
+  | ID of string
+  | FUN
+  | EQ
+  | ELSE
+  | DIV
+  | BOOL of bool
+  | ARROW
+val menhir_begin_marker : int
+val xv_var : string
+val xv_toplevel : Syntax.command
+val xv_factor_expr : Syntax.expr
+val xv_expr : Syntax.expr
+val xv_atomic_expr : Syntax.expr
+val xv_arith_expr : Syntax.expr
+val xv_app_expr : Syntax.expr
+val menhir_end_marker : int

@@ -1,0 +1,138 @@
+# dune build
+# OCAMLPARAM: unset
+# Workspace root: /home/tohta_abe/program/fljikken/06-231001/toi3
+$ /usr/bin/nproc > /tmp/dune5a35b4.output 2> /dev/null
+# Auto-detected concurrency: 12
+# disable binary cache
+$ /home/tohta_abe/.opam/4.14.1/bin/ocamlc.opt -config > /tmp/dune03ea38.output
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Dyn
+#  ; merlin = true
+#  ; for_host = None
+#  ; fdo_target_exe = None
+#  ; build_dir = "default"
+#  ; toplevel_path = Some External "/home/tohta_abe/.opam/4.14.1/lib/toplevel"
+#  ; ocaml_bin = External "/home/tohta_abe/.opam/4.14.1/bin"
+#  ; ocaml = Ok External "/home/tohta_abe/.opam/4.14.1/bin/ocaml"
+#  ; ocamlc = External "/home/tohta_abe/.opam/4.14.1/bin/ocamlc.opt"
+#  ; ocamlopt = Ok External "/home/tohta_abe/.opam/4.14.1/bin/ocamlopt.opt"
+#  ; ocamldep = Ok External "/home/tohta_abe/.opam/4.14.1/bin/ocamldep.opt"
+#  ; ocamlmklib = Ok External "/home/tohta_abe/.opam/4.14.1/bin/ocamlmklib.opt"
+#  ; env =
+#      map
+#        { "DUNE_OCAML_HARDCODED" : "/home/tohta_abe/.opam/4.14.1/lib"
+#        ; "DUNE_OCAML_STDLIB" : "/home/tohta_abe/.opam/4.14.1/lib/ocaml"
+#        ; "DUNE_SOURCEROOT" :
+#            "/home/tohta_abe/program/fljikken/06-231001/toi3"
+#        ; "INSIDE_DUNE" :
+#            "/home/tohta_abe/program/fljikken/06-231001/toi3/_build/default"
+#        ; "OCAMLFIND_IGNORE_DUPS_IN" :
+#            "/home/tohta_abe/program/fljikken/06-231001/toi3/_build/install/default/lib"
+#        ; "OCAMLPATH" :
+#            "/home/tohta_abe/program/fljikken/06-231001/toi3/_build/install/default/lib"
+#        ; "OCAMLTOP_INCLUDE_PATH" :
+#            "/home/tohta_abe/program/fljikken/06-231001/toi3/_build/install/default/lib/toplevel"
+#        ; "OCAML_COLOR" : "always"
+#        ; "OPAMCOLOR" : "always"
+#        }
+#  ; findlib_path = [ External "/home/tohta_abe/.opam/4.14.1/lib" ]
+#  ; arch_sixtyfour = true
+#  ; natdynlink_supported = true
+#  ; supports_shared_libraries = true
+#  ; ocaml_config =
+#      { version = "4.14.1"
+#      ; standard_library_default = "/home/tohta_abe/.opam/4.14.1/lib/ocaml"
+#      ; standard_library = "/home/tohta_abe/.opam/4.14.1/lib/ocaml"
+#      ; standard_runtime = "the_standard_runtime_variable_was_deleted"
+#      ; ccomp_type = "cc"
+#      ; c_compiler = "gcc"
+#      ; ocamlc_cflags =
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
+#      ; ocamlc_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
+#      ; ocamlopt_cflags =
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
+#      ; ocamlopt_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
+#      ; bytecomp_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-pthread"
+#          ; "-fPIC"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ]
+#      ; bytecomp_c_libraries = [ "-lm"; "-lpthread" ]
+#      ; native_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-pthread"
+#          ; "-fPIC"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ]
+#      ; native_c_libraries = [ "-lm" ]
+#      ; cc_profile = []
+#      ; architecture = "amd64"
+#      ; model = "default"
+#      ; int_size = 63
+#      ; word_size = 64
+#      ; system = "linux"
+#      ; asm = [ "as" ]
+#      ; asm_cfi_supported = true
+#      ; with_frame_pointers = false
+#      ; ext_exe = ""
+#      ; ext_obj = ".o"
+#      ; ext_asm = ".s"
+#      ; ext_lib = ".a"
+#      ; ext_dll = ".so"
+#      ; os_type = "Unix"
+#      ; default_executable_name = "a.out"
+#      ; systhread_supported = true
+#      ; host = "x86_64-pc-linux-gnu"
+#      ; target = "x86_64-pc-linux-gnu"
+#      ; profiling = false
+#      ; flambda = false
+#      ; spacetime = false
+#      ; safe_string = true
+#      ; exec_magic_number = "Caml1999X031"
+#      ; cmi_magic_number = "Caml1999I031"
+#      ; cmo_magic_number = "Caml1999O031"
+#      ; cma_magic_number = "Caml1999A031"
+#      ; cmx_magic_number = "Caml1999Y031"
+#      ; cmxa_magic_number = "Caml1999Z031"
+#      ; ast_impl_magic_number = "Caml1999M031"
+#      ; ast_intf_magic_number = "Caml1999N031"
+#      ; cmxs_magic_number = "Caml1999D031"
+#      ; cmt_magic_number = "Caml1999T031"
+#      ; natdynlink_supported = true
+#      ; supports_shared_libraries = true
+#      ; windows_unicode = false
+#      }
+#  }
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamllex -q -o lexer.ml lexer.mll)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamldep.opt -modules -impl eval.ml) > _build/default/.main.eobjs/eval.ml.d
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamldep.opt -modules -impl main.ml) > _build/default/.main.eobjs/main.ml.d
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/menhir parser.mly --base parser --infer-write-query parser__mock.ml.mock)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamldep.opt -modules -impl syntax.ml) > _build/default/.main.eobjs/syntax.ml.d
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamldep.opt -modules -impl lexer.ml) > _build/default/.main.eobjs/lexer.ml.d
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamldep.opt -modules -impl parser__mock.ml.mock) > _build/default/.main.eobjs/parser__mock.ml.mock.d
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -bin-annot -I .main.eobjs/byte -no-alias-deps -opaque -o .main.eobjs/byte/dune__exe.cmo -c -impl .main.eobjs/dune__exe.ml-gen)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -a -g -bin-annot -I .main.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .main.eobjs/byte/dune__exe__Syntax.cmo -c -impl syntax.ml)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -a -g -I .main.eobjs/byte -open Dune__exe -short-paths -i -impl parser__mock.ml.mock) > _build/default/parser__mock.mli.inferred
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/menhir parser.mly --base parser --infer-read-reply parser__mock.mli.inferred)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamldep.opt -modules -intf parser.mli) > _build/default/.main.eobjs/parser.mli.d
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamldep.opt -modules -impl parser.ml) > _build/default/.main.eobjs/parser.ml.d
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -a -g -bin-annot -I .main.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .main.eobjs/byte/dune__exe__Parser.cmi -c -intf parser.mli)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -I .main.eobjs/byte -I .main.eobjs/native -intf-suffix .ml-gen -no-alias-deps -opaque -o .main.eobjs/native/dune__exe.cmx -c -impl .main.eobjs/dune__exe.ml-gen)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -a -g -bin-annot -I .main.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .main.eobjs/byte/dune__exe__Eval.cmo -c -impl eval.ml)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -a -g -bin-annot -I .main.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .main.eobjs/byte/dune__exe__Lexer.cmo -c -impl lexer.ml)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -a -g -I .main.eobjs/byte -I .main.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .main.eobjs/native/dune__exe__Syntax.cmx -c -impl syntax.ml)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -a -g -bin-annot -I .main.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .main.eobjs/byte/dune__exe__Main.cmo -c -impl main.ml)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -a -g -I .main.eobjs/byte -I .main.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .main.eobjs/native/dune__exe__Eval.cmx -c -impl eval.ml)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -a -g -I .main.eobjs/byte -I .main.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .main.eobjs/native/dune__exe__Lexer.cmx -c -impl lexer.ml)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -a -g -I .main.eobjs/byte -I .main.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .main.eobjs/native/dune__exe__Main.cmx -c -impl main.ml)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -a -g -I .main.eobjs/byte -I .main.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .main.eobjs/native/dune__exe__Parser.cmx -c -impl parser.ml)
+$ (cd _build/default && /home/tohta_abe/.opam/4.14.1/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -a -g -o main.exe .main.eobjs/native/dune__exe.cmx .main.eobjs/native/dune__exe__Syntax.cmx .main.eobjs/native/dune__exe__Eval.cmx .main.eobjs/native/dune__exe__Parser.cmx .main.eobjs/native/dune__exe__Lexer.cmx .main.eobjs/native/dune__exe__Main.cmx)

@@ -1,0 +1,61 @@
+問1
+出力例:
+tohta_abe@ispcJPH245YLSV:~/program/fljikken/09-231001/toi1$ ./main.exe
+# let id = fun x -> x;;
+val id :  = <fun>
+# (id 0,id true);;
+- :  = (0, true)
+# let a= [];;
+val a :  = []
+# let a = 2::a;;
+val a :  = [2]
+# 3::1::a;;
+- :  = [3; 1; 2]
+
+考察:
+ペア、リストに対応するvalueの型VPair,VListを用意し、infer_exprでEPair,ENil,EConsを評価する際にそれらを使って出力することでペアやリストに対応させた。
+
+問2
+出力例:
+tohta_abe@ispcJPH245YLSV:~/program/fljikken/09-231001/toi2$ ./main.exe
+# (match 1 with x -> x);;
+- :  = 1
+# let rec sum x = match x with [] -> 0 | a :: rest -> a + sum(rest);;
+val sum :  = <fun>
+# sum (1::2::3::4::5::[]);;
+
+考察:
+資料に従い、パターンマッチの実装を行った。
+例題で作ったパターンマッチの照合関数を利用し、前のパターンから順に照合を行い、マッチが発見され次第、新しい変数の対応関係を環境に追加して評価を行っている。
+すでに環境で使用されている変数がパターンマッチで使用されている場合、パターンマッチで生成された対応関係により上書きされるので、環境に追加する際は先に評価される前側に新しい環境を追加している。
+
+問3
+出力例:
+# let id = fun x -> x in (id 0,id true);;
+- : int  * bool  = (0, true)
+# let rec sum x = match x with [] -> 0 | a :: rest -> a + sum(rest);;
+val sum : ( int list -> int )  = <fun>
+# let a = 6::5::4::3::2::1::[];;
+val a : int list  = [6; 5; 4; 3; 2; 1]
+# sum a;;
+- : int  = 21
+
+考察:
+資料に従い、型検査の実装を行った。
+リストに対応する型TyList ty とペアに対応する型TyPair (ty,ty)を型の種類に追加し、制約解消についてもそれらに対応させた。これらの型を用いてEPair,ENil,EConsの型解釈を行った。
+パターンマッチの型解釈については、パターンの型はすべてマッチ先の型と一致すること、マッチ発見時に対応付けられる表現についても型がすべて一致することなどに注意して制約を生成している。
+
+問4
+出力例:
+tohta_abe@ispcJPH245YLSV:~/program/fljikken/09-231001/toi4$ ./main.exe
+#  let id = fun x -> x in (id 0,id true);;
+- : int  * bool  = (0, true)
+# let rec fib x = if x< 2 then x else fib (x-1)+ fib (x-2);;
+val fib : ( int -> int )  = <fun>
+# fib 9;;
+- : int  = 34
+
+考察:
+名前呼びでは変数を呼び出し時に初めて評価するため、変数を環境に追加する際には変数名と値の組ではなく、変数名とthunkの組を追加している。ここで、thunkとは式と環境の参照の組である。
+変数を評価する際は、環境からその変数名に対応するthunkを見つけ、thunkの環境の参照の中身を用いてthunkの式の値を評価することで名前呼びを実現している。
+thunkに環境ではなく環境の参照を用いているのは再帰関数に対応させるためで、再帰関数を評価する際は自分自身が環境に登録されていることが必要となるため、再帰関数のthunkを生成する際はダミー環境をthunkに含め、現在の環境に自分自身を追加したものでダミー環境を上書きすることで再帰関数に対応している。

@@ -1,0 +1,3 @@
+[submodule "compiler_jikken/compiler-jikken-7"]
+	path = compiler_jikken/compiler-jikken-7
+	url = git@github.com:utokyo-compiler/compiler-jikken-7.git

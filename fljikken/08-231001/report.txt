@@ -1,0 +1,152 @@
+問1
+スライドの単一化アルゴリズムに従って制約を最汎単一化子に読み替える。
+・unify{α=Int,β=α->α}=unify{β=Int->Int}∘[α:=Int]
+                          =unify{}∘[β:=Int->Int]∘[α:=Int]
+                          =[α:=Int,β:=Int->Int]
+・unify{Int=Int->α}は例外となり、単一化子は存在しない。
+・unify{Int->Int=α->β}=unify{Int=α,Int=β}
+                      =unify{Int=β}∘[α:=Int]
+                      =unify{}∘[β:=Int]∘[α:=Int]
+                      =[α:=Int,β:=Int]
+・unify{α1 -> α2 = α2 -> α3, α3 = β1 -> β2}=unify{α1=α2,α2=α3,α3=β1->β2}
+                                           =unify{α2=α3,α3=β1->β2}∘[α1:=α2]
+                                           =unify{α3=β1->β2}∘[α2:=α3]∘[α1:=α2]
+                                           =unify{}∘[α3:=β1->β2]∘[α1:=α3,α2:=α3]
+                                           =[α1:=β1->β2,α2:=β1->β2,α3:=β1->β2]
+・unify{α->α=β->γ,γ=Int->β}=unify{α=β,α=γ,γ=Int->β}
+                           =unify{β=γ,γ=Int->β}∘[α:=β]
+                           =unify{γ=Int->γ}∘[β:=γ]∘[α:=β]
+　ここで例外となるので、単一化子は存在しない。
+[(TyFun (TyVar 1 , TyVar 2),TyFun (TyVar 2,TyVar 3));(TyVar 3,TyFun (TyInt,TyVar 2))]
+
+問2
+出力例:
+─( 13:08:32 )─< command 0 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # #use "toi2.ml";;
+type tyvar = int
+and ty = TyInt | TyBool | TyFun of ty * ty | TyVar of tyvar
+type subst = (tyvar * ty) list
+val new_tyvar : unit -> tyvar = <fun>
+val print_type : ty -> unit = <fun>
+val ty_subst : subst -> ty -> ty = <fun>
+─( 13:08:32 )─< command 1 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let subst =[(1,TyBool);(2,TyInt);(3,TyFun(TyBool,TyInt))];;
+val subst : (tyvar * ty) list =
+  [(1, TyBool); (2, TyInt); (3, TyFun (TyBool, TyInt))]
+─( 13:08:34 )─< command 2 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # ty_subst subst TyInt;;
+- : ty = TyInt
+─( 13:08:41 )─< command 3 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # ty_subst subst (TyVar 3);;
+- : ty = TyFun (TyBool, TyInt)
+─( 13:09:07 )─< command 4 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # ty_subst subst (TyVar 4);;
+- : ty = TyVar 4
+─( 13:13:01 )─< command 5 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # ty_subst subst (TyFun ((TyVar 1),(TyVar 2)));;
+- : ty = TyFun (TyBool, TyInt)
+
+考察:
+型substはtyvarとそのtyvarの代入先の型の組のリストとなっている。
+ty_substではその型代入のデータをもとにある型を受け取って型変数に代入後の型を返している。
+具体的には、TyIntやTyBoolを受け取ったらそのまま返し、TyVarを受け取ったらsubstの中を探してあれば代入し、TyFunを受け取ったら引数と返り値それぞれに対して再帰的にty_substを呼び出している。
+
+問3:
+出力例:
+
+─( 13:20:40 )─< command 0 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # #use "toi3.ml";;
+type tyvar = int
+and ty = TyInt | TyBool | TyFun of ty * ty | TyVar of tyvar
+type subst = (tyvar * ty) list
+val new_tyvar : unit -> tyvar = <fun>
+val print_type : ty -> unit = <fun>
+val ty_subst : subst -> ty -> ty = <fun>
+val compose : subst -> (tyvar * ty) list -> subst = <fun>
+─( 13:20:40 )─< command 1 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let subst1 =[(1,TyVar 3);(2,TyVar 3);(3,TyFun(TyBool,TyInt))];;
+val subst1 : (tyvar * ty) list =
+  [(1, TyVar 3); (2, TyVar 3); (3, TyFun (TyBool, TyInt))]
+─( 13:20:42 )─< command 2 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # let subst2 =[(1,TyFun(TyInt,TyInt));(2,TyInt);3,TyBool];;
+val subst2 : (tyvar * ty) list =
+  [(1, TyFun (TyInt, TyInt)); (2, TyInt); (3, TyBool)]
+─( 13:20:44 )─< command 3 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # compose subst1 subst2;;
+- : subst = [(1, TyFun (TyInt, TyInt)); (2, TyInt); (3, TyBool)]
+─( 13:21:42 )─< command 4 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # compose subst2 subst1;;
+- : subst = [(1, TyBool); (2, TyBool); (3, TyFun (TyBool, TyInt))]
+
+考察:
+composeでは、代入subst1,subst2を受け取り、subst2を適用してからsubst1を適用するような処理に対応する代入を生成している。
+具体的実装としては、subst2内の型変数に対し、代入先の型にsubst1を適用したうえでsubst1にその結果を追加している。
+ここで、衝突があるといけないのでsubst1にもともとその型変数が入っていた場合には削除する処理を行っている。
+
+問4
+出力例:
+
+─( 13:43:20 )─< command 0 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # #use "toi4.ml";;
+type tyvar = int
+and ty = TyInt | TyBool | TyFun of ty * ty | TyVar of tyvar
+type subst = (tyvar * ty) list
+val new_tyvar : unit -> tyvar = <fun>
+val print_type : ty -> unit = <fun>
+val ty_subst : subst -> ty -> ty = <fun>
+val compose : subst -> (tyvar * ty) list -> subst = <fun>
+val replace : (ty * ty) list -> tyvar * ty -> (ty * ty) list = <fun>
+exception ConstraintConflict
+val exist_in_expr_type : ty -> tyvar -> bool = <fun>
+val unify : (ty * ty) list -> subst = <fun>
+─( 13:43:20 )─< command 1 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # unify [(TyFun (TyVar 1 , TyVar 1),TyFun (TyVar 2,TyVar 3));(TyVar 3,TyFun (TyVar 4,TyVar 5))];;
+- : subst =
+[(1, TyFun (TyVar 4, TyVar 5)); (2, TyFun (TyVar 4, TyVar 5));
+ (3, TyFun (TyVar 4, TyVar 5))]
+─( 13:43:26 )─< command 2 >─────────────────────────────────────────────────────────────────────{ counter: 0 }─
+utop # unify [(TyFun (TyVar 1 , TyVar 2),TyFun (TyVar 2,TyVar 3));(TyVar 3,TyFun (TyInt,TyVar 2))];;
+Exception: ConstraintConflict.
+
+考察:
+unifyはスライドの論理関係に従って実装した。
+4,5番目のケースで型変数αが型tの中で現れていないことを調べる必要があり、そのための関数exist_in_expr_typeが再帰的に定義されている。
+
+問5:
+出力例:
+tohta_abe@ispcJPH245YLSV:~/program/fljikken/08-231001/toi5$ ./main.exe
+# fun x -> x + 1;;
+- : ( Int -> Int )  = <fun>
+# fun f -> f 3 + f 5;;
+- : ( ( Int -> Int ) -> Int )  = <fun>
+# fun f -> fun g -> fun x -> f (g x);;
+- : ( ( a8-> a9) -> ( ( a7-> a8) -> ( a7-> a9) ) )  = <fun>
+# fun x -> fun y -> fun z -> x z (y z);;
+- : ( ( a12-> ( a14-> a15) ) -> ( ( a12-> a14) -> ( a12-> a15) ) )  = <fun>
+# fun x -> if x then 1 else x;;
+Fatal error: exception Dune__exe__Const_solver.ConstraintConflict
+tohta_abe@ispcJPH245YLSV:~/program/fljikken/08-231001/toi5$ ./main.exe
+# let id = fun x -> x in if id true then id 1 else id 0;;
+- : Int  = 1
+# let id = fun x -> x;;
+val id : ( a8-> a8)  = <fun>
+# if id true then id 1 else id 0;;
+- : Int  = 1
+# let rec id x = x in if id true then id 1 else id false;;
+Fatal error: exception Dune__exe__Const_solver.ConstraintConflict
+tohta_abe@ispcJPH245YLSV:~/program/fljikken/08-231001/toi5$ ./main.exe
+# let rec id x = x in if id true then id 1 else id 0;;            
+- : Int  = 1
+# let rec id x=x;;
+val id : ( a9-> a9)  = <fun>
+#  if id true then id 1 else id 0;;  
+- : Int  = 1
+# 1=false;;
+Fatal error: exception Dune__exe__Const_solver.ConstraintConflict
+
+考察:
+型スキームは(内部の自由変数のリスト,自分の型)となっている。
+let文で変数を定義する際は型を調べたうえでgenerize関数を用いてその型と現在の型環境を照らし合わせ、型の中に現れる型変数の中で型環境に現れないものを自由変数として型スキームに登録する。
+こうして型を型スキームに一般化したものを型環境に追加する。
+let e1 in e2 文やlet rec e1 in e2といった局所定義の際には、まずe1の解釈を行って制約をunify、得られた代入をsubstする。得られたe1の型t1の中に現れる自由変数のうち、型環境に現れる型変数(get_type_varsで調べる)についてsubstを行ったものに現れないものを自由変数として型スキームを生成し、型環境に追加したうえでe2を解釈する。
+型を解釈する際にEvarとのセットで型環境に登録された型を解釈する際には、型スキームの自由変数について新たに生成した型変数で置き換えて型を生成し(この処理を行うのがinstantiate関数)、そのうえで型の解釈を行う。これによってそれぞれの呼び出しに対して別の型変数が与えられるので、不正なconflictが起こらないようになっている。

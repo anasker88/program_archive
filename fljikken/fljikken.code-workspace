@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"name": "reversi",
+			"path": "13-231001/reversi"
+		},
+		{
+			"name": "fljikken",
+			"path": "."
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"ALLSIDE"
+		],
+		"rust-analyzer.linkedProjects": [
+			"./Cargo.toml"
+		]
+	}
+}

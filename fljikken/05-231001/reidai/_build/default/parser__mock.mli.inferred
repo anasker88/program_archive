@@ -1,0 +1,20 @@
+type token =
+    THEN
+  | SEMISEMI
+  | RPAR
+  | PLUS
+  | LT
+  | LPAR
+  | INT of int
+  | IF
+  | ID of string
+  | EQ
+  | ELSE
+  | BOOL of bool
+val menhir_begin_marker : int
+val xv_toplevel : Syntax.command
+val xv_factor_expr : Syntax.expr
+val xv_expr : Syntax.expr
+val xv_atomic_expr : Syntax.expr
+val xv_arith_expr : Syntax.expr
+val menhir_end_marker : int

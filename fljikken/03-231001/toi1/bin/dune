@@ -1,0 +1,4 @@
+(executable
+ (public_name toi1)
+ (name sort)
+ (libraries toi1))

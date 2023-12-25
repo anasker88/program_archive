@@ -1,0 +1,55 @@
+\documentclass[a4paper,11pt]{ltjsarticle}
+
+
+% 数式
+\usepackage{amsmath,amsfonts}
+\usepackage{bm}
+% 画像
+\usepackage{graphicx}
+%枠付き文書
+\usepackage{ascmac}
+\usepackage{fancybox}
+
+\begin{document}
+
+\title{知能システム論第9回 問1}
+\author{ 05-231001 阿部 桃大}
+\maketitle
+
+\begin{itembox}[l]{問題1}
+  遷移確率が直前m個の状態に依存する場合の
+  ビタビアルゴリズムを与え、その時間計算量を
+  答えよ\newline
+  $p(z_t|z_{t-1}, z_{t-2}, \cdots, z_{t-m}) = a_{z_{t-m}\cdots z_{t-m}z_t}$
+\end{itembox}
+ビタビアルゴリズムは、以下の通りとなる。
+\begin{enumerate}
+  \item 各状態$k=1,2,\cdots,K$に対し初期化
+        \begin{align*}
+          q_1(k)         & = p(k|BOS)b_{k,x_1} \\
+          \epsilon _1(k) & = BOS
+        \end{align*}
+  \item $t=1,2,\cdots,T-1, k=1,2,\cdots,K$に対し
+        $l=min(1,t+1-m)$として
+        \begin{align*}
+          q_{t+1}(k)         & = \max_{i_l,i_{l+1},\cdots,i_t} (q_l(i_l)p(k|i_t,i_{t-1},\cdots,i_l)b_{k,x_{t+1}}) \\
+          \epsilon _{t+1}(k) & = \arg max_{i_l,i_{l+1},\cdots,i_t} (q_l(i_l)p(k|i_t,i_{t-1},\cdots,i_l))
+        \end{align*}
+        この部分は、$O(TK^{(m+1)})$である。
+  \item 以降は通常のビタビアルゴリズムと同様である。
+\end{enumerate}
+よって、時間計算量は$O(TK^{(m+1)})$となる。
+
+なお、$p(k|i_t,i_{t-1},\cdots,i_l)$は、時間に依存しないので、この部分は事前に計算しておくことができる。この計算は、$O(K^m)$である。
+
+この処理を行うことで残りの計算量は$O((T-m)K^2)$となる。
+
+\begin{itembox}
+  [l]{問題2}
+  上記の設定において、ビームサーチの時間計算量をこたえよ
+\end{itembox}
+上記の前処理を行わない場合、計算量は$O(TNK^m)$となる。
+
+上記の前処理を行った場合は、$O(TNK)$となる。
+
+\end{document}

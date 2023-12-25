@@ -1,0 +1,132 @@
+問1:
+出力例
+# let x2=i2n 2;;
+val x2 : nat = S (S Z)
+# let x5=i2n 5;;
+val x5 : nat = S (S (S (S (S Z))))
+# let x7=i2n 7;;
+val x7 : nat = S (S (S (S (S (S (S Z))))))
+# n2i x7;;
+- : int = 7
+# n2i (add x5 x7);;
+- : int = 12
+# n2i (sub x7 x2);;
+- : int = 5
+# n2i (mul x5 x7);;
+- : int = 35
+# n2i (pow x2 x5);;
+- : int = 32
+
+考察
+要素Zと自身に作用する演算子Sのみから構成される型natにより自然数を表現するには、Ｚを最小要素である0とし、Sをインクリメント演算子として扱えばよい。
+足し算は第一引数からSを除いたものと第二引数にＳを加えたものの足し算の結果と一致するから、末尾再帰によりかける。
+引き算はy=0の時を初期状態として再帰的に表現するとうまくいくが、x-y=(x-1)-(y-1)という風に計算することになるので、ディクリメント演算子に当たる関数desを定義し、それを用いた。
+掛け算は足し算を用いて、累乗は掛け算を用いてそれぞれ容易に再帰的に定義することが可能である。
+ただし、累乗については任意の自然数の0乗は1と定義されるから、初期値が1を表すS Zであることに注意が必要である。
+
+問2:
+出力例
+# let node3=Node (3,Leaf,Leaf)
+let node4=Node (4,Leaf,Leaf)
+let node5=Node (5,Leaf,Leaf)
+let node6=Node (6,Leaf,Leaf)
+let node1=Node (1,node3,node4)
+let node2=Node (2,node5,node6)
+let node0=Node (0,node1,node2);;
+val node3 : int tree = Node (3, Leaf, Leaf)
+val node4 : int tree = Node (4, Leaf, Leaf)
+val node5 : int tree = Node (5, Leaf, Leaf)
+val node6 : int tree = Node (6, Leaf, Leaf)
+val node1 : int tree = Node (1, Node (3, Leaf, Leaf), Node (4, Leaf, Leaf))
+val node2 : int tree = Node (2, Node (5, Leaf, Leaf), Node (6, Leaf, Leaf))
+val node0 : int tree =
+  Node (0, Node (1, Node (3, Leaf, Leaf), Node (4, Leaf, Leaf)),
+   Node (2, Node (5, Leaf, Leaf), Node (6, Leaf, Leaf)))
+# pre_order node0;;
+- : int list = [0; 1; 3; 4; 2; 5; 6]
+# in_order node0;;
+- : int list = [3; 1; 4; 0; 2; 5; 6]
+# post_order node0;;
+- : int list = [3; 4; 1; 2; 5; 6; 0]
+
+考察
+いずれも深さ優先探索をベースとしているため、ほとんど同じようなコードで表現することができる。
+深さ優先探索であるから再帰的に書けば容易に実現でき、自分->左の子->右の子とすれば行きがけ順、左の子->自分->右の子とすれば通りがけ順、左の子->右の子->自分とすれば帰りがけ順となる。
+これらの関数は、いずれも同じ速度で動く。
+
+問3:
+出力例
+# let node3=Node (3,Leaf,Leaf)
+let node4=Node (4,Leaf,Leaf)
+let node5=Node (5,Leaf,Leaf)
+let node6=Node (6,Leaf,Leaf)
+let node1=Node (1,node3,node4)
+let node2=Node (2,node5,node6)
+let node0=Node (0,node1,node2);;
+val node3 : int tree = Node (3, Leaf, Leaf)
+val node4 : int tree = Node (4, Leaf, Leaf)
+val node5 : int tree = Node (5, Leaf, Leaf)
+val node6 : int tree = Node (6, Leaf, Leaf)
+val node1 : int tree = Node (1, Node (3, Leaf, Leaf), Node (4, Leaf, Leaf))
+val node2 : int tree = Node (2, Node (5, Leaf, Leaf), Node (6, Leaf, Leaf))
+val node0 : int tree =
+  Node (0, Node (1, Node (3, Leaf, Leaf), Node (4, Leaf, Leaf)),
+   Node (2, Node (5, Leaf, Leaf), Node (6, Leaf, Leaf)))
+# level_order node0;;
+- : int list = [0; 1; 2; 3; 4; 5; 6]
+
+考察
+幅優先探索は探索待ちのノードをキューとして管理しながら探索を行うことで実現できる。
+今回のコードでは探索済みノードのリストと探索待ちのノードのキューのリストをタプルで管理し、再帰的に探索を行うことで実装した。
+この手法では深さが深くなると探索待ちのノードのキューが長くなるのでメモリを圧迫すると思われる。
+
+問4:
+考察
+抽象構文器に対応する型exprは、Eの構文において整数や真偽値はそのまま対応させればよい。
+その他演算子を含む構文については、構文内のEをexprとし、同じ数のexprの組に対応付けられる型として解釈すればよい。
+
+問5:
+出力例
+# # use "toi5.ml";;
+type value = VInt of int | VBool of bool
+exception Eval_error
+type expr =
+    EConstInt of int
+  | EAdd of expr * expr
+  | ESub of expr * expr
+  | EMul of expr * expr
+  | EDiv of expr * expr
+  | EConstBool of bool
+  | EEqual of expr * expr
+  | ELs of expr * expr
+  | EIf of expr * expr * expr
+val add : value -> value -> value = <fun>
+val sub : value -> value -> value = <fun>
+val mul : value -> value -> value = <fun>
+val div : value -> value -> value = <fun>
+val equal : value -> value -> value = <fun>
+val ls : value -> value -> value = <fun>
+val myif : value -> 'a -> 'a -> 'a = <fun>
+val eval : expr -> value = <fun>
+# let a3 =EConstInt 3;;
+val a3 : expr = EConstInt 3
+# let a5 =EConstInt 5;;
+val a5 : expr = EConstInt 5
+# let at= EConstBool true;;
+val at : expr = EConstBool true
+# let ad3_5=EAdd (a3,a5);;
+val ad3_5 : expr = EAdd (EConstInt 3, EConstInt 5)
+# eval ad3_5;;
+- : value = VInt 8
+# let mul3_5=EMul (a3,a5);;
+val mul3_5 : expr = EMul (EConstInt 3, EConstInt 5)
+# eval mul3_5;;
+- : value = VInt 15
+# eval (EIf (at,ad3_5,mul3_5));;
+- : value = VInt 8
+# eval (EIf (ad3_5,at,mul3_5));;
+Exception: Eval_error.
+
+考察:
+例外Eval_errorを定義し、これを状況に応じて返すため、各処理に対して関数を定義し、その中で例外処理を行った。
+また、addなどはそのまま出力するとint型に出力してしまうので、必要に応じてVIntなど型を指定してvalueへの関数となるようにした。

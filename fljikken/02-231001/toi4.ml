@@ -1,0 +1,10 @@
+type expr =
+  | EConstInt of int(*数値*)
+  | EAdd of expr * expr(* E + E *)
+  | ESub of expr * expr(* E - E *)
+  | EMul of expr * expr(* E * E *) 
+  | EDiv of expr * expr(* E / E *)
+  | EConstBool of bool(* true , false *)
+  | EEqual of expr * expr(* E = E*)
+  | ELs of expr * expr(* E < E *)
+  | EIf of expr * expr*expr(* if E then E else E *)

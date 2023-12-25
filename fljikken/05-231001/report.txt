@@ -1,0 +1,74 @@
+問1
+実行例:
+tohta_abe@ispcJPH245YLSV:~/program/05-231001/example$ ocamlc -c syntax.ml
+tohta_abe@ispcJPH245YLSV:~/program/05-231001/example$ menhir --infer parser.mly
+tohta_abe@ispcJPH245YLSV:~/program/05-231001/example$ ocamllex lexer.mll
+30 states, 1692 transitions, table size 6948 bytes
+tohta_abe@ispcJPH245YLSV:~/program/05-231001/example$ ocamlc -c parser.mli
+tohta_abe@ispcJPH245YLSV:~/program/05-231001/example$ ocamlc -c parser.ml
+tohta_abe@ispcJPH245YLSV:~/program/05-231001/example$ ocamlc -c lexer.ml
+tohta_abe@ispcJPH245YLSV:~/program/05-231001/example$ ocamlc -c main.ml
+tohta_abe@ispcJPH245YLSV:~/program/05-231001/example$ ocamlc -o example syntax.cmo parser.cmo lexer.cmo main.cmo
+tohta_abe@ispcJPH245YLSV:~/program/05-231001/example$ ./example
+if x<0 then 0 else x;;
+EIf (ELt (x,0),0,x)
+
+menhir -vの出力
+tohta_abe@ispcJPH245YLSV:~/program/05-231001/example$ menhir -v parser.mly
+Error: the code back-end requires the type of every nonterminal symbol to be
+known. Please specify the type of every symbol via %type declarations, or
+enable type inference (look up --infer in the manual).
+Type inference is automatically enabled when Menhir is used via Dune,
+provided the dune-project file says (using menhir 2.0) or later.
+The types of the following nonterminal symbols are unknown:
+arith_expr
+atomic_expr
+expr
+factor_expr
+
+考察:
+手動ビルドでもduneを用いた場合と同じように動くプログラムができたが、ステップが多く、duneを用いたほうがずっと便利である。
+menhirの出力については、階層構造で優先順位をつけるのに用いたarith_exprなどの記号に対し定義を与えることが求められている。
+今回の文法ではconflictはないのでそれに関する出力はない。
+
+
+問2
+出力例:
+tohta_abe@ispcJPH245YLSV:~/program/05-231001/toi2$ ./main.exe
+# 2+3;;
+- = 5
+# 5-2;;
+- = 3
+# 1+12/3;;
+- = 5
+
+考察:
+eval.mlにおいてEAddと同様、VIntの値2つを受け取り計算結果を返すESub,EMul,EDivを実装した。
+
+問3
+出力例:
+tohta_abe@ispcJPH245YLSV:~/program/05-231001/toi3$ ./main.exe
+# let x=3;;
+val x = 3
+# let y=5;;
+val y = 5
+# x*y;;
+- = 15
+# let z=1 in x+y*z;;
+- = 8
+# 
+
+考察:
+局所定義は、環境にe1の評価結果を一時的に追加したうえでe2の評価を行うことで実現される。
+一方で、変数の定義では環境の書き換えが必要となるため、eを評価したうえで変数名xの値がその評価結果であることを環境に追加するような処理を行うことで実現される。
+
+問4:
+出力例:
+# let tt=true in if tt||false then 1*2 else 3-4;;
+- = 2
+# let tt=true in if tt&&false then 1*2 else 3-4;;
+- = -1
+
+考察:
+evalの書き換えについては、問2と同様、Vbool2つを受け取って適切な評価結果を返す処理EAnd,EOrを定義した。
+これに合わせてsyntax.mlやlexer.mll,parser.mlyを書き換え、&&や||をトークンEAnd,EOrに対応させ、指定の処理を行うようにした。
