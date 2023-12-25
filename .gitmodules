@@ -1,3 +1,10 @@
 [submodule "compiler_jikken/compiler-jikken-7"]
 	path = compiler_jikken/compiler-jikken-7
 	url = git@github.com:utokyo-compiler/compiler-jikken-7.git
+
+[submodule "cpuex/cpuex_2023_group7"]
+	path = cpuex/cpuex_2023_group7
+	url = git@github.com:E869120/cpuex_2023_group7.git
+[submodule "fljikken/13-231001/reversi"]
+	path = fljikken/13-231001/reversi
+	url = git@github.com:anasker88/reversi.git
