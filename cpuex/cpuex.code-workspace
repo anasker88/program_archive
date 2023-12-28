@@ -6,7 +6,7 @@
 		}
 	],
 	"settings": {
-		"terminal.integrated.cwd": "/home/tohta/program/cpuex/cpuex_2023_group7/04_simulator",
+		"terminal.integrated.cwd": "./cpuex_2023_group7/04_simulator",
 		"ocaml.sandbox": {
 			"kind": "opam",
 			"switch": "default"
@@ -100,7 +100,20 @@
 			"typeindex": "cpp",
 			"typeinfo": "cpp",
 			"valarray": "cpp",
-			"variant": "cpp"
+			"variant": "cpp",
+			"__bit_reference": "cpp",
+			"__config": "cpp",
+			"__debug": "cpp",
+			"__threading_support": "cpp",
+			"ios": "cpp",
+			"locale": "cpp",
+			"queue": "cpp",
+			"stack": "cpp",
+			"expected": "cpp",
+			"format": "cpp",
+			"spanstream": "cpp",
+			"stacktrace": "cpp",
+			"stdfloat": "cpp"
 		}
 	}
 }
