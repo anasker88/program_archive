@@ -1,5 +1,5 @@
 OCOPT = -ccopt -O2
-OCAMLBASE=/usr/bin/
+OCAMLBASE=/Users/tohtaabe/.opam/default/bin
 OCAMLC=$(OCAMLBASE)/ocamlc
 OCAMLOPT=$(OCAMLBASE)/ocamlopt
 
