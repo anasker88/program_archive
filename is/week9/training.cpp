@@ -84,6 +84,7 @@ int main()
     // テストデータの予測
     ifstream ifs2("wsj_sample_test.pos");
     ofstream ofs("result.pos");
+    map<pair<int, string>, double> q;
     while (ifs2 && getline(ifs2, line))
     {
         istringstream iss(line);
