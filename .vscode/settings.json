@@ -4,6 +4,8 @@
         "*.c": "c",
         "group_COMMIT": "plaintext",
         "ostream": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "vector": "cpp",
+        "SIMPLE2D.C": "cpp"
     }
 }
