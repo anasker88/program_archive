@@ -11,9 +11,11 @@ FILE *output;
 vector<char> buf(1 << 20);
 
 // 問題設定
-const int NX = 100; // x方向の格子点数
-const int NY = 100; // y方向の格子点数
+const int NX = 20; // x方向の格子点数
+const int NY = 20; // y方向の格子点数
 int MAX_CYCLE;
+int output_cycle;
+int output_mask;
 double EPSP, OMG, DT, L, G, BETA, THETA_H, THETA_C, A, NU;
 double DX = 1.0 / NX; // x方向の格子間隔
 double DY = 1.0 / NY; // y方向の格子間隔
@@ -60,11 +62,26 @@ int main()
         calc_DP();
         calc_UVPT();
         set_boundary();
-        if ((cycle & 0x1f) == 0)
+        if (!(cycle & output_mask))
         {
             write_result(cycle);
+            // プログレスバー
+            cout << "\r[";
+            for (int i = 0; i < 50; i++)
+            {
+                if (i < cycle * 50 / MAX_CYCLE)
+                {
+                    cout << "#";
+                }
+                else
+                {
+                    cout << "-";
+                }
+            }
+            cout << "]" << ((double)cycle * 100 / MAX_CYCLE) << "%";
         }
     }
+    cout << "\rcomplete!                                                        " << endl;
     // ファイルを閉じる
     fclose(output);
     return 0;
@@ -100,8 +117,13 @@ void read_input()
     getline(ifs, str);
     NU = stod(str.substr(str.find(" ") + 1));
     ifs.close();
-    PR = NU / A;
-    GR = G * BETA * (THETA_H - THETA_C) * L * L * L / (NU * NU);
+    // output_cycleはMAX_CYCLEの1/100くらいの2のべき乗
+    output_cycle = 1 << (int)(log2(MAX_CYCLE) - 7);
+    output_mask = output_cycle - 1;
+    // PR = NU / A;
+    // GR = G * BETA * (THETA_H - THETA_C) * L * L * L / (NU * NU);
+    PR = 7.1e-1;
+    GR = 1.0e+5;
     RA = GR * PR;
     cout << "PR=" << PR << endl;
     cout << "RA=" << RA << endl;
@@ -204,6 +226,7 @@ double calc_DIFT(int i, int j)
 double calc_BUOV(int i, int j)
 {
     return RA * PR * (T.at(i).at(j) + T.at(i).at(j + 1)) / 2.0;
+    // return 0;
 }
 
 // 各項を計算
@@ -324,16 +347,11 @@ void calc_DP()
         }
         // P_Dを更新
         memcpy(&P_D[0][0], &P_D_new[0][0], sizeof(double) * (NX + 2) * (NY + 2));
-        if (count > 100000)
+        if (count > 10000)
         {
-            cout << "count=" << count << endl;
-            break;
+            cout << "failed to converge" << endl;
+            exit(1);
         }
-    }
-    if (count > mymax)
-    {
-        mymax = count;
-        cout << "max=" << mymax << endl;
     }
 }
 

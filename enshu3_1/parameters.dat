@@ -1,5 +1,5 @@
 MAX_CYCLE: 10000
-EPSP: 1.0e-3
+EPSP: 1.0e-6
 OMG: 1.0
 DT: 1.0e-6
 L(m): 1e-1 //箱の一辺の長さ
