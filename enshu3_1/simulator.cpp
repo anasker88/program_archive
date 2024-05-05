@@ -139,6 +139,9 @@ void init()
     // NX, NY
     fwrite(&NX, sizeof(int), 1, output);
     fwrite(&NY, sizeof(int), 1, output);
+    // 何サイクル分のデータを保存するか
+    int output_num = (MAX_CYCLE - 1) / output_cycle + 1;
+    fwrite(&output_num, sizeof(int), 1, output);
     // 初期条件
     // 速度は0
     for (int i = 0; i < NX + 1; i++)
