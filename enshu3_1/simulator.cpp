@@ -66,19 +66,19 @@ int main()
         {
             write_result(cycle);
             // プログレスバー
-            cout << "\r[";
+            printf("\r[");
             for (int i = 0; i < 50; i++)
             {
                 if (i < cycle * 50 / MAX_CYCLE)
                 {
-                    cout << "#";
+                    printf("#");
                 }
                 else
                 {
-                    cout << "-";
+                    printf("-");
                 }
             }
-            cout << "]" << ((double)cycle * 100 / MAX_CYCLE) << "%";
+            printf("] %3d%%", (int)((double)cycle * 100 / MAX_CYCLE));
         }
     }
     cout << "\rcomplete!                                                        " << endl;
