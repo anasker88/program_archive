@@ -62,22 +62,30 @@
             } else {
               root = linkages[j - 1].position;
             }
-            let vec1 = target_position - root;
-            let vec2 = linkages[3].position - root;
-            let cos_theta = vec1.dot(vec2) / (vec1.norm() * vec2.norm());
-            let theta = Math.acos(cos_theta);
-            if (vec1.cross(vec2) < 0) {
-              theta = -theta;
+            let v1 = vec2.sub([], linkages[3].position, root);
+            let v2 = vec2.sub([], target_position, root);
+            let theta = Math.atan2(
+              v1[0] * v2[1] - v1[1] * v2[0],
+              v1[0] * v2[0] + v1[1] * v2[1]
+            );
+            //　計算が失敗した場合は0にする
+            if (isNaN(theta)) {
+              theta = 0;
+            }
+            // 逆方向の場合は角度を反転
+            if (vec2.dot(v1, v2) < 0) {
+              theta = theta - Math.PI;
             }
             // 角度を更新
-            theta = 1;
             let angle = linkages[j].angle + (theta * 180) / Math.PI;
-            if (angle > 180) {
-              angle = 180;
-            } else if (angle < -180) {
-              angle = -180;
+            while (angle > 180) {
+              angle -= 360;
+            }
+            while (angle < -180) {
+              angle += 360;
             }
             linkages[j].angle = angle;
+            // 設定した角度を元に位置を更新
             update_position();
           }
         }
