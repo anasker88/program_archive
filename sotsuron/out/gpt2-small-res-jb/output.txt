@@ -1,0 +1,15 @@
+Layer 9
+Diff sum: tensor([0., 0., 0.,  ..., 0., 0., 0.], device='mps:0')
+Top 5 features: tensor([66.0648, 32.1848, 27.5145, 23.5092, 18.3859], device='mps:0')
+Top 5 feature indices: tensor([10862, 11237, 13043,  7448, 17950], device='mps:0')
+Average of the absolute difference: 0.16385692358016968
+Accuracy by random forest: 0.9930555555555556
+Top 5 features by random forest: tensor([0.0070, 0.0062, 0.0054, 0.0050, 0.0049, 0.0049, 0.0045, 0.0040, 0.0039,
+        0.0036], dtype=torch.float64)
+Top 5 feature indices by random forest: tensor([ 8047, 16508, 10762, 15634, 11336, 22749, 10136,    59, 14362,  3839])
+Accuracy by SVM: 0.9305555555555556
+Top 5 features by SVM: tensor([[0.2335, 0.2162, 0.2071, 0.2023, 0.2005, 0.1973, 0.1937, 0.1921, 0.1857,
+         0.1820]], dtype=torch.float64)
+Top 5 feature indices by SVM: tensor([[15380,  7927, 14217,  6513, 10136, 21046,  3839,   851, 15263, 11827]])
+Cosine similarity between SVM and random forest: tensor([0.0236], dtype=torch.float64)
+

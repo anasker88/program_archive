@@ -8,3 +8,8 @@
 [submodule "fljikken/13-231001/reversi"]
 	path = fljikken/13-231001/reversi
 	url = git@github.com:anasker88/reversi.git
+[submodule "enshu3_3"]
+	path = enshu3_3
+	url = git@github.com:anasker88/endshu3_3.git
+[submodule "googlescript"]
+	path = googlescript
